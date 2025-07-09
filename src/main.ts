@@ -48,7 +48,13 @@ async function run() {
 
     if (!emsdkFolder) {
       const emsdkArchive = await tc.downloadTool("https://github.com/emscripten-core/emsdk/archive/main.zip");
-      emsdkFolder = await tc.extractZip(emsdkArchive);
+      if (emArgs.actionsCacheFolder && process.env.GITHUB_WORKSPACE) {
+        const fullCachePath = path.join(process.env.GITHUB_WORKSPACE, emArgs.actionsCacheFolder);
+        emsdkFolder = await tc.extractZip(emsdkArchive, fullCachePath);
+        foundInCache = true;
+      } else {
+        emsdkFolder = await tc.extractZip(emsdkArchive);
+      }
     } else {
       foundInCache = true;
     }
