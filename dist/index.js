@@ -87,7 +87,14 @@ function run() {
             }
             if (!emsdkFolder) {
                 const emsdkArchive = yield tc.downloadTool("https://github.com/emscripten-core/emsdk/archive/main.zip");
-                emsdkFolder = yield tc.extractZip(emsdkArchive);
+                if (emArgs.actionsCacheFolder && process.env.GITHUB_WORKSPACE) {
+                    const fullCachePath = path.join(process.env.GITHUB_WORKSPACE, emArgs.actionsCacheFolder);
+                    emsdkFolder = yield tc.extractZip(emsdkArchive, fullCachePath);
+                    foundInCache = true;
+                }
+                else {
+                    emsdkFolder = yield tc.extractZip(emsdkArchive);
+                }
             }
             else {
                 foundInCache = true;
