@@ -90,7 +90,6 @@ function run() {
                 if (emArgs.actionsCacheFolder && process.env.GITHUB_WORKSPACE) {
                     const fullCachePath = path.join(process.env.GITHUB_WORKSPACE, emArgs.actionsCacheFolder);
                     emsdkFolder = yield tc.extractZip(emsdkArchive, fullCachePath);
-                    foundInCache = true;
                 }
                 else {
                     emsdkFolder = yield tc.extractZip(emsdkArchive);
@@ -132,8 +131,8 @@ function run() {
             };
             yield exec.exec(`${emsdk} construct_env`, [], { listeners: { stdline: envListener, errline: envListener } });
             if (emArgs.actionsCacheFolder && !foundInCache && process.env.GITHUB_WORKSPACE) {
-                fs.mkdirSync(path.join(process.env.GITHUB_WORKSPACE, emArgs.actionsCacheFolder), { recursive: true });
-                yield io.cp(path.join(emsdkFolder, 'emsdk-main'), path.join(process.env.GITHUB_WORKSPACE, emArgs.actionsCacheFolder), { recursive: true });
+                // fs.mkdirSync(path.join(process.env.GITHUB_WORKSPACE, emArgs.actionsCacheFolder), { recursive: true });
+                // await io.cp(path.join(emsdkFolder, 'emsdk-main'), path.join(process.env.GITHUB_WORKSPACE, emArgs.actionsCacheFolder), { recursive: true })
                 yield cache.saveCache([emArgs.actionsCacheFolder], cacheKey);
             }
         }

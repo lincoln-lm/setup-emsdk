@@ -51,7 +51,6 @@ async function run() {
       if (emArgs.actionsCacheFolder && process.env.GITHUB_WORKSPACE) {
         const fullCachePath = path.join(process.env.GITHUB_WORKSPACE, emArgs.actionsCacheFolder);
         emsdkFolder = await tc.extractZip(emsdkArchive, fullCachePath);
-        foundInCache = true;
       } else {
         emsdkFolder = await tc.extractZip(emsdkArchive);
       }
@@ -102,8 +101,8 @@ async function run() {
     await exec.exec(`${emsdk} construct_env`, [], {listeners: {stdline: envListener, errline: envListener}})
 
     if (emArgs.actionsCacheFolder && !foundInCache && process.env.GITHUB_WORKSPACE) {
-      fs.mkdirSync(path.join(process.env.GITHUB_WORKSPACE, emArgs.actionsCacheFolder), { recursive: true });
-      await io.cp(path.join(emsdkFolder, 'emsdk-main'), path.join(process.env.GITHUB_WORKSPACE, emArgs.actionsCacheFolder), { recursive: true })
+      // fs.mkdirSync(path.join(process.env.GITHUB_WORKSPACE, emArgs.actionsCacheFolder), { recursive: true });
+      // await io.cp(path.join(emsdkFolder, 'emsdk-main'), path.join(process.env.GITHUB_WORKSPACE, emArgs.actionsCacheFolder), { recursive: true })
       await cache.saveCache([emArgs.actionsCacheFolder], cacheKey);
     }
   } catch (error) {
